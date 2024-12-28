@@ -1,0 +1,57 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, <span style="text-decoration:line-through">world!</span> Accessible Tooltip Component!</h1>
+
+<div style="display:grid;grid-template-columns: auto; grid-template-rows: auto; gap:1rem; justify-items:center; align-items:center; margin-top:4rem;">
+    <div style="grid-area: 1 / 1 / 2/ 2;">
+        <Tooltip Position="ToolTipPosition.TopLeft" ControlID="TopLeftID" Text="Tooltip for the top left button">
+            <button class="btn btn-primary" style="width:170px;" aria-describedby="TopLeftID" type="button">Top Left</button>
+        </Tooltip>
+    </div>
+    <div style="grid-area: 1 / 2 / 2/ 3;">
+        <Tooltip Position="ToolTipPosition.Top" Text="Top tooltip" AriaType="AriaType.LabelledBy">
+            <button class="btn btn-primary" style="width:170px;" type="button">Top (aria label)</button>
+        </Tooltip>
+    </div>
+    <div style="grid-area: 1 / 3 / 2/ 4;">
+        <Tooltip Position="ToolTipPosition.TopRight" Text="Tooltip for the top right button">
+            <button class="btn btn-primary" style="width:170px;" type="button">Top Right</button>
+        </Tooltip>
+    </div>
+
+    <div style="grid-area: 2 / 1 / 3/ 2;">
+        <Tooltip Position="ToolTipPosition.Left" Text="Tooltip for the left button">
+            <button class="btn btn-primary" style="width:170px;" type="button">Left</button>
+        </Tooltip>
+    </div>
+
+    <div style="grid-area: 2 / 2 / 3/ 3; display:flex;flex-direction:column; justify-content:center; align-items:center; gap:1rem;">
+        <span>How tooltip arrows can be formed using just the border.</span>
+        <span style="border:40px solid; border-top-color:red; border-right-color:blue; border-bottom-color:green;border-left-color:yellow;"></span>
+        <span>Above, a span with no width or height.Just a 40px border with each border coloured;</span>
+    </div>
+
+    <div style="grid-area: 2 / 3 / 3/ 4;">
+        <Tooltip Position="ToolTipPosition.Right" Text="Tooltip for the right button" ShowClose="false">
+            <button class="btn btn-primary" style="width:170px;" type="button">Right (no close)</button>
+        </Tooltip>
+    </div>
+    <div style="grid-area: 3 / 1 / 4/ 2;">
+        <Tooltip Position="ToolTipPosition.BottomLeft" Text="Tooltip for the bottom left button">
+            <button class="btn btn-primary" style="width:170px;" type="button">Bottom Left</button>
+        </Tooltip>
+    </div>
+    <div style="grid-area: 3 / 2 / 4/ 3;">
+        <Tooltip Position="ToolTipPosition.Bottom" Text="Tooltip for the bottom button">
+            <button class="btn btn-primary" style="width:170px;" type="button">Bottom</button>
+        </Tooltip>
+    </div>
+    <div style="grid-area: 3 / 3 / 4/ 4;">
+        <Tooltip Position="ToolTipPosition.BottomRight" Text="Tooltip for the top bottom right button">
+            <button class="btn btn-primary" style="width:170px;" type="button" >Bottom Right</button>
+        </Tooltip>
+    </div>
+</div>
+

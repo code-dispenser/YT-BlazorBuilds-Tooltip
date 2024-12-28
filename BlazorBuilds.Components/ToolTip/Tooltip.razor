@@ -1,0 +1,86 @@
+﻿@implements IAsyncDisposable
+@inject IJSRuntime _jsRuntime
+
+<div @ref="@_tooltipReference" class="@GlobalValues.Tooltip_Class" data-static="@GlobalValues.GetStyleAsValue(StyleAs)">
+    
+    @ChildContent
+
+    @if(false == String.IsNullOrWhiteSpace(Text) && false == Disabled && ChildContent is not null)
+    {
+        <span id="@(String.IsNullOrWhiteSpace(ControlID) ? Guid.NewGuid().ToString() : ControlID)" role="tooltip" class="@GlobalValues.Tooltip_Text_Class @GetPositionClass(Position)" 
+        style="@CheckReduceBorderWidth(ShowClose)">
+
+            @Text
+
+            @if (true == ShowClose)
+            {
+                <span class="@GlobalValues.Tooltip_Icon_Button_Class" aria-hidden="true">
+                    <span class="@GlobalValues.Tooltip_Close_Icon_Class"></span>
+                </span>
+            }
+        </span>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string  Text      { get; set; } = String.Empty;
+
+    [Parameter] public RenderFragment?  ChildContent { get; set; } = default;
+    [Parameter] public StyleAs          StyleAs      { get; set; } = StyleAs.Dynamic;
+    [Parameter] public ToolTipPosition  Position     { get; set; } = ToolTipPosition.Top;
+    [Parameter] public AriaType         AriaType     { get; set; } = AriaType.DescribedBy;
+    [Parameter] public string?          ControlID    { get; set; } = default;
+    [Parameter] public bool             Disabled     { get; set; } = false;
+    [Parameter] public bool             ShowClose    { get; set; } = true;
+
+    private ElementReference    _tooltipReference { get; set; }
+    private IJSObjectReference? _jsModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (true == firstRender) await RegisterTooltip(_tooltipReference);
+    }
+
+    private async Task RegisterTooltip(ElementReference tooltipElement)
+    {
+        var configuration = new { tooltipTextClass = GlobalValues.Tooltip_Text_Class, tooltipModifiers = GlobalValues.GetTooltipModifiers(), 
+            tooltipGapSize = GlobalValues.Tooltip_Tip_Border_Width * 2,    initialModifierClass = GetPositionClass(Position),
+            hideTooltipClass  = GlobalValues.Tooltip_Hide_Modifier_Class, closeTooltipKey      = GlobalValues.Tooltip_KeyBoard_Close_Key,
+            tooltipIconButtonClass = GlobalValues.Tooltip_Icon_Button_Class, ariaAttribute = (AriaType == AriaType.LabelledBy ? GlobalValues.Aria_Attribute_LabelledBy : GlobalValues.Aria_Attribute_DescribedBy)
+        };
+
+        _jsModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", GlobalValues.JavaScript_File_Path);
+
+        await _jsModule.InvokeVoidAsync(GlobalValues.JavaScript_Register_Func, tooltipElement,configuration);
+    }
+
+    private string? CheckReduceBorderWidth(bool showClose)
+
+        => showClose == true ? null : $"{GlobalValues.Tooltip_Tip_Border_Width_Var_Name}:{GlobalValues.Tooltip_Tip_Border_Width / 2}px;";
+
+    private string GetPositionClass(ToolTipPosition toolTipPosition)
+
+        => toolTipPosition switch
+        {
+            ToolTipPosition.TopLeft     => GlobalValues.Tooltip_Text_Top_Left_Modifier_Class,
+            ToolTipPosition.Top         => GlobalValues.Tooltip_Text_Top_Modifier_Class,
+            ToolTipPosition.TopRight    => GlobalValues.Tooltip_Text_Top_Right_Modifier_Class,
+            ToolTipPosition.Right       => GlobalValues.Tooltip_Text_Right_Modifier_Class,
+            ToolTipPosition.BottomLeft  => GlobalValues.Tooltip_Text_Bottom_Left_Modifier_Class,
+            ToolTipPosition.Bottom      => GlobalValues.Tooltip_Text_Bottom_Modifier_Class,
+            ToolTipPosition.BottomRight => GlobalValues.Tooltip_Text_Bottom_Right_Modifier_Class,
+            ToolTipPosition.Left        => GlobalValues.Tooltip_Text_Left_Modifier_Class,
+            _                           => "tool-tip__text--top"
+        };
+
+    public async ValueTask DisposeAsync() 
+    {
+        if (_jsModule is not null)
+        {
+            await _jsModule.InvokeVoidAsync(GlobalValues.JavaScript_UnRegister_Func, _tooltipReference, GlobalValues.Tooltip_Icon_Button_Class);
+            await _jsModule.DisposeAsync();
+        }
+    }
+}
+
+    
