@@ -258,4 +258,25 @@
         transition-delay: 0ms;
         transition: opacity 100ms ease, visibility 100ms ease;
     }
+
+
+    @media (forced-colors: active) {
+
+        &__text {
+            border: 1px solid;
+        }
+
+        &__icon-button {
+            forced-color-adjust: none;
+            background-color: Canvas;
+            color: CanvasText;
+            border: 1px solid CanvasText;
+            --_tip-bg: CanvasText;
+
+            &:hover {
+                background-color: CanvasText;
+                color: Canvas;
+            }
+        }
+    }
 }
