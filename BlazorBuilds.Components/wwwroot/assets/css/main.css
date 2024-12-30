@@ -254,7 +254,7 @@
   transition-delay: 0ms;
   transition: opacity 100ms ease, visibility 100ms ease;
 }
-@media (forced-colors: active) {
+@media (forced-colors: active), (prefers-contrast: high) {
   .tool-tip__text {
     border: 1px solid;
   }
