@@ -2,12 +2,12 @@
 @inject IJSRuntime _jsRuntime
 
 <div @ref="@_tooltipReference" class="@GlobalValues.Tooltip_Class" data-static="@GlobalValues.GetStyleAsValue(StyleAs)">
-    
+
     @ChildContent
 
     @if(false == String.IsNullOrWhiteSpace(Text) && false == Disabled && ChildContent is not null)
     {
-        <span id="@(String.IsNullOrWhiteSpace(ControlID) ? Guid.NewGuid().ToString() : ControlID)" role="tooltip" class="@GlobalValues.Tooltip_Text_Class @GetPositionClass(Position)" 
+        <span id="@(String.IsNullOrWhiteSpace(ControlID) ? _controlID : ControlID)" role="tooltip" class="@GlobalValues.Tooltip_Text_Class @GetPositionClass(Position)" 
         style="@CheckReduceBorderWidth(ShowClose)">
 
             @Text
@@ -35,6 +35,7 @@
 
     private ElementReference    _tooltipReference { get; set; }
     private IJSObjectReference? _jsModule;
+    private string              _controlID = Guid.NewGuid().ToString();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
