@@ -182,6 +182,10 @@ function configurTooltipTrigger(tooltip, configuration) {
     }
 }
 function configureTooltip(tooltip, configuration) {
+    const existingHandlers = _tooltipHandlers.get(tooltip);
+    if (existingHandlers === null || existingHandlers === void 0 ? void 0 : existingHandlers.positionHandler) {
+        tooltip.removeEventListener("mouseenter", existingHandlers.positionHandler);
+    }
     const mouseEnterHandler = createMouseEnterHandler(tooltip, configuration);
     tooltip.removeEventListener("mouseenter", mouseEnterHandler);
     tooltip.addEventListener("mouseenter", mouseEnterHandler);

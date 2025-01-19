@@ -221,6 +221,12 @@ function configurTooltipTrigger(tooltip: HTMLElement, configuration: ITooltipCon
 
 function configureTooltip(tooltip: HTMLElement, configuration: ITooltipConfiguration) {
 
+    const existingHandlers = _tooltipHandlers.get(tooltip);
+
+    if (existingHandlers?.positionHandler) {
+        tooltip.removeEventListener("mouseenter", existingHandlers.positionHandler);
+    }
+
     const mouseEnterHandler: EventListener = createMouseEnterHandler(tooltip, configuration);
 
     tooltip.removeEventListener("mouseenter", mouseEnterHandler);
